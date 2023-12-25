@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>DialBackground.png</file>
+        <file>DialBG.svg</file>
+    </qresource>
+</RCC>

@@ -25,8 +25,10 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MinimumOSVersion</key>
-	<string>${IPHONEOS_DEPLOYMENT_TARGET}</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
+        <string>${IPHONEOS_DEPLOYMENT_TARGET}</string>
+        <key>NSBluetoothPeripheralUsageDescription</key>
+        <string>Used to connect to BTLE sensors in Train</string>
+        <key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Qt LE scanner wants to access your Bluetooth adapter</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

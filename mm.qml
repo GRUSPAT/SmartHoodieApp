@@ -120,7 +120,7 @@ ApplicationWindow {
     }
     Column {
         anchors.fill: parent
-        anchors.topMargin: 565
+       // anchors.topMargin: 565
         anchors.bottomMargin: 10
         anchors.leftMargin: 0
         anchors.rightMargin: 0
@@ -154,7 +154,7 @@ ApplicationWindow {
             // Ukrycie legendy
             legend.visible: false
         }*/
-        Button {
+      /*  Button {
             id: settingsButton
             width: parent.width
             text: "USTAWIENIA"

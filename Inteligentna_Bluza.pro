@@ -1,11 +1,11 @@
-QT += quick bluetooth svg
+QT += quick bluetooth svg charts
 
 SOURCES += \
         bledevice.cpp \
         deviceinfo.cpp \
         main.cpp
 
-resources.files = main.qml 
+resources.files = main.qml
 resources.prefix = /$${TARGET}
 RESOURCES += resources \
     resources.qrc
@@ -23,10 +23,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     DialBG.svg \
-    DialBackground.png \
     Info.plist \
     Info.qmake.macos.plist \
-    appicon.png
+    appicon.png \
+    mm.qml \
+    settings.qml
 
 HEADERS += \
     bledevice.h \

@@ -5,6 +5,8 @@ import QtQuick.Shapes
 import QtCharts 2.15
 import QtCore
 
+
+
 ApplicationWindow {
     id: applicationWindow
     Material.theme: Material.Dark
@@ -16,10 +18,18 @@ ApplicationWindow {
     title: qsTr("Inteligentna Bluza")
     background: Image {
         source: "qrc:/images/MainScreen.svg"
-               //source: "file://Users/patrykgruszowski/Inteligentna_Bluza/DialBackground.png"
-               sourceSize: Qt.size(parent.width, parent.height) // Dopasowanie rozmiaru obrazu do D
-           }
+        sourceSize: Qt.size(parent.width, parent.height) // Dopasowanie rozmiaru obrazu do D
+    }
     property bool disconnect: true
+    property int dialValue: 0
+
+    property color backgroundColor: "#1C1B1F"
+    property color primaryColor: "#2C302E"
+    property color textColor: "#F7FFF7"
+    property color accentColor: "#FF6B00"
+
+
+
     header: ToolBar {
         contentHeight: toolButtonScan.implicitHeight
         Row{
@@ -49,7 +59,7 @@ ApplicationWindow {
                 font.pixelSize: Qt.application.font.pixelSize * 2.0
                 onClicked: {
                     textTX.text =
-                           ""
+                            ""
                     textRX.text =
                             ""
                 }
@@ -120,12 +130,97 @@ ApplicationWindow {
     }
     Column {
         anchors.fill: parent
-        anchors.topMargin: 565
-        anchors.bottomMargin: 10
-        anchors.leftMargin: 0
-        anchors.rightMargin: 0
+        spacing: 9
+        FontLoader { id: font; source: "qrc:/fonts/Montserrat-Bold.ttf" }
 
-/*
+
+        Rectangle {
+            width: parent.width
+            height: 55
+            color: primaryColor
+            radius: 20
+            anchors.left: parent.left
+            anchors.right: parent.right
+        }
+
+        Row {
+            spacing: 9
+            width: parent.width
+            height: 277
+
+            Rectangle {
+                width: parent.width * 0.5 - 9
+                height: 277
+                color: accentColor
+                radius: 10
+            }
+
+            Column {
+                spacing: 9
+                width: parent.width * 0.5 - 9
+                Rectangle {
+                    width: parent.width
+                    height: 134
+                    color: primaryColor
+                    radius: 20
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: 134
+                    color: primaryColor
+                    radius: 20
+                }
+            }
+        }
+
+        Rectangle {
+            width: parent.width
+            height: 200
+            color: primaryColor
+            radius: 20
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            Text {
+                id: valueTemperatureInternal
+                font.family: font.name
+                // font.styleName: "Bold"
+                //font.bold: true
+                text: "35"// Wyświetlenie aktualnej wartości pokrętła
+                font.pixelSize: 48
+                color: textColor
+                anchors.horizontalCenter: parent.horizontalCenter
+                //y: parent.height * 0.3
+            }
+
+        }
+        Rectangle {
+            width: parent.width
+            height: 117
+            color: "transparent"
+
+            radius: 20
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+
+
+            Text {
+                id: valueDis
+                font.family: font.name
+                // font.styleName: "Bold"
+                //font.bold: true
+                text: dialValue// Wyświetlenie aktualnej wartości pokrętła
+                font.pixelSize: 96
+                color: "white"
+                anchors.horizontalCenter: parent.horizontalCenter
+                //y: parent.height * 0.3
+
+            }
+        }
+
+        /*
         ChartView {
             title: "Spline"
             anchors.fill: parent
@@ -154,7 +249,7 @@ ApplicationWindow {
             // Ukrycie legendy
             legend.visible: false
         }*/
-        Button {
+        /*Button {
             id: settingsButton
             width: parent.width
             text: "USTAWIENIA"
@@ -177,8 +272,8 @@ ApplicationWindow {
             color: "LightBlue"
             font.pixelSize: 18
         }
-
-/*
+*/
+        /*
         Item {
                    width: 50
                    height: 25
@@ -203,7 +298,7 @@ ApplicationWindow {
         Item {
             width: 480
             height: 480
-/*
+            /*
                        Button {
                            id: autoButton
                            text: "AUTO"
@@ -219,26 +314,26 @@ ApplicationWindow {
                                }
                            }
                        }*/
-                       Rectangle {
-                               width: 430
-                               height: 195
-                               color: "transparent"
-                               clip: true
-            Dial {
-                id: customDial
+            Rectangle {
                 width: 430
-                height: 430
-                //anchors.centerIn: parent
-                from: 60
-                to: 0
-                startAngle: -90
-                endAngle: 90
-                stepSize: 1
-                snapMode: Dial.SnapAlways
-                property int minAngle: -90
-                property int maxAngle: 90;
-                property int currentValue: 0;
-/*
+                height: 195
+                color: "transparent"
+                clip: true
+                Dial {
+                    id: customDial
+                    width: 430
+                    height: 430
+                    //anchors.centerIn: parent
+                    from: 60
+                    to: 0
+                    startAngle: -90
+                    endAngle: 90
+                    stepSize: 1
+                    snapMode: Dial.SnapAlways
+                    property int minAngle: -90
+                    property int maxAngle: 90;
+                    property int currentValue: 0;
+                    /*
                 onRotationChanged: {
                                 // Tutaj możesz dodać logikę, która będzie wywoływać opinie zwrotną (haptic feedback)
                                 if (Qt.platform.os === "android") {
@@ -250,49 +345,85 @@ ApplicationWindow {
                                 }
                             }
 */
-                background: Image {
-                    source: "qrc:/images/DialBG.svg"
-                           //source: "file://Users/patrykgruszowski/Inteligentna_Bluza/DialBackground.png"
-                           sourceSize: Qt.size(parent.width, parent.height) // Dopasowanie rozmiaru obrazu do Dial
+                    background: Image {
+                        source: "qrc:/images/DialBG.svg"
+                        //source: "file://Users/patrykgruszowski/Inteligentna_Bluza/DialBackground.png"
+                        sourceSize: Qt.size(parent.width, parent.height) // Dopasowanie rozmiaru obrazu do Dial
 
-                           transform: Rotation {
-                                           id: backgroundRotation
-                                           origin.x: customDial.width / 2
-                                           origin.y: customDial.height / 2
-                                           angle: {
-                                               // Ograniczenie obrotu do zakresu 90 do 90 stopni
-                                               const minAngle = -90;
-                                               const maxAngle = 90;
-                                               if (customDial.angle < customDial.minAngle) {
-                                                   return minAngle;
-                                               } else if (customDial.angle > maxAngle) {
-                                                   return maxAngle;
-                                               } else {
-                                                   return customDial.angle;
-                                               }
-                                           }
-                                       }
-                           Image {
-                                           source: "qrc:/images/DialRing.svg"
-                                           width: parent.width
-                                           height: parent.height
-                                           transformOrigin: Item.Center
-                                           rotation: -customDial.angle // Obrót obrazka w przeciwną stronę do pokrętła
-                                       }
-                       }
+                        transform: Rotation {
+                            id: backgroundRotation
+                            origin.x: customDial.width / 2
+                            origin.y: customDial.height / 2
+                            angle: {
+                                // Ograniczenie obrotu do zakresu 90 do 90 stopni
+                                const minAngle = -90;
+                                const maxAngle = 90;
+                                if (customDial.angle < customDial.minAngle) {
+                                    return minAngle;
+                                } else if (customDial.angle > maxAngle) {
+                                    return maxAngle;
+                                } else {
+                                    return customDial.angle;
+                                }
+                            }
+                        }
+                        Image {
+                            source: "qrc:/images/DialRing.svg"
+                            width: parent.width
+                            height: parent.height
+                            transformOrigin: Item.Center
+                            rotation: -customDial.angle // Obrót obrazka w przeciwną stronę do pokrętła
+                        }
+                    }
 
 
+                    Button {
+                        id: autoButton
 
-                Text {
-                       id: valueDisplay
-                       text: customDial.currentValue// Wyświetlenie aktualnej wartości pokrętła
-                       font.pixelSize: 20
-                       color: "white"
-                       anchors.horizontalCenter: parent.horizontalCenter
-                               y: parent.height * 0.3
-                   }
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        y: parent.height * 0.25
+                        Text {
+                            id: valueAuto
+                            font.family: font.name
+                            // font.styleName: "Bold"
+                            //font.bold: true
+                            text: "AUTO"
+                            font.pixelSize: 24
+                            color: "white"
+                            anchors.horizontalCenter: parent.horizontalCenter
 
-/*
+
+                        }
+                        onClicked: {
+                            if (customDial.handle.enabled) {
+                                console.log("Przełączono na tryb automatyczny")
+                                customDial.handle.enabled = false
+                                valueAuto.color = accentColor
+                                valueManual.color = textColor
+                            } else {
+                                console.log("Tryb manualny")
+                                customDial.handle.enabled = true
+                                valueManual.color = accentColor
+                            valueAuto.color = textColor
+                            }
+                        }
+                    }
+
+                    Text {
+                        id: valueManual
+                        font.family: font.name
+                        // font.styleName: "Bold"
+                        //font.bold: true
+                        text: "MANUAL"// Wyświetlenie aktualnej wartości pokrętła
+                        font.pixelSize: 24
+                        color: "white"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        y: parent.height * 0.35
+
+                    }
+
+
+                    /*
                 background: Image {
                     x: customDial.width / 2 - width / 2
                     y: customDial.height / 2 - height / 2
@@ -307,27 +438,27 @@ ApplicationWindow {
                     opacity: customDial.enabled ? 1 : 0.3
                 }
 */
-                handle: Rectangle {
-                    id: handleItem
-                    x: customDial.background.x + customDial.background.width / 2 - width / 2
-                    y: customDial.background.y + customDial.background.height / 2 - height / 2
-                    width: 16
-                    height: 16
-                    visible:false
+                    handle: Rectangle {
+                        id: handleItem
+                        x: customDial.background.x + customDial.background.width / 2 - width / 2
+                        y: customDial.background.y + customDial.background.height / 2 - height / 2
+                        width: 16
+                        height: 16
+                        visible:false
 
-                    //color: customDial.pressed ? "#FF6B00" : "#FF9B00"
-                    radius: 8
-                    antialiasing: true
-                    opacity: customDial.enabled ? 1 : 0.3
-                    onRotationChanged: {
-                                    backgroundRotation.angle = rotation // Obrót tła zgodnie z uchwytem
-                                }
-                    transform: [
-                        Translate {
-                            y: -Math.min(customDial.background.width, customDial.background.height) * 0.4 + handleItem.height / 2
-                        },
-                        Rotation {
-                            /*angle: {
+                        //color: customDial.pressed ? "#FF6B00" : "#FF9B00"
+                        radius: 8
+                        antialiasing: true
+                        opacity: customDial.enabled ? 1 : 0.3
+                        onRotationChanged: {
+                            backgroundRotation.angle = rotation // Obrót tła zgodnie z uchwytem
+                        }
+                        transform: [
+                            Translate {
+                                y: -Math.min(customDial.background.width, customDial.background.height) * 0.4 + handleItem.height / 2
+                            },
+                            Rotation {
+                                /*angle: {
                                 // Ograniczenie obrotu do zakresu 90 do 90 stopni
                                 const minAngle = -93;
                                 const maxAngle = 93;
@@ -343,24 +474,19 @@ ApplicationWindow {
                                     return customDial.angle;
                                 }
                             }*/
-                            origin.x: handleItem.width / 2
-                            origin.y: handleItem.height / 2
-                        }
-                    ]
-                }
+                                origin.x: handleItem.width / 2
+                                origin.y: handleItem.height / 2
+                            }
+                        ]
+                    }
 
-                onValueChanged: {
-                    // Obsługa zmiany wartości pokrętła
-                    //valueDisplay.text = customDial.currentValue + 31;
-                    //console.log("Nowa wartość:", customDial.currentValue)
-                    valueDisplay.text = customDial.value;
-                    console.log("Nowa wartość:", customDial.value)
-                }}
+                    onValueChanged: {
+                       // valueDisplay.text = customDial.value;
+                        dialValue = customDial.value;
+                        console.log("Nowa wartość:", customDial.value)
+                    }}
             }
         }
-
-
-
 
         Connections {
             target: bledevice

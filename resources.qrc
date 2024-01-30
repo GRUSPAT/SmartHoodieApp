@@ -4,4 +4,8 @@
         <file>DialRing.svg</file>
         <file>MainScreen.svg</file>
     </qresource>
+    <qresource prefix="/fonts">
+        <file>Montserrat-VariableFont_wght.ttf</file>
+        <file>Montserrat-Bold.ttf</file>
+    </qresource>
 </RCC>

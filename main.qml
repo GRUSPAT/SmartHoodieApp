@@ -22,6 +22,11 @@ ApplicationWindow {
     }
     property bool disconnect: true
     property int dialValue: 0
+    property real externalTemperature: 0
+    property real externalPressure: 0
+    property real externalHumidity: 0
+    property bool timerRunning: false
+    property string bufforText: ""
 
     property color backgroundColor: "#1C1B1F"
     property color primaryColor: "#2C302E"
@@ -133,6 +138,27 @@ ApplicationWindow {
         spacing: 9
         FontLoader { id: font; source: "qrc:/fonts/Montserrat-Bold.ttf" }
 
+        Timer {
+                id: timer
+                interval: 1000 // czas w milisekundach (1000ms = 1s)
+                repeat: true // powtarzaj co określony interwał
+                running: timerRunning // uruchom timer od razu
+                onTriggered: bledevice.writeData("TEMPERATURA") // wywołaj funkcję sendText() przy każdym wyzwaleniu timera
+            }
+
+        function checkAndSplitString(inputString) {
+            var values = inputString.trim().split(" ");
+
+            if (values.length === 3 && values[0] === "W:") {
+                externalTemperature = parseFloat(values[1]);
+                externalHumidity = parseFloat(values[2]);
+                externalPressure = parseFloat(values[3]);
+
+
+            } else {
+                console.log("Nieprawidłowy format łańcucha");
+            }
+        }
 
         Rectangle {
             width: parent.width
@@ -141,6 +167,18 @@ ApplicationWindow {
             radius: 20
             anchors.left: parent.left
             anchors.right: parent.right
+            Text {
+                id: valueExternalTemperature
+                font.family: font.name
+                // font.styleName: "Bold"
+                //font.bold: true
+                text: externalTemperature.toString()
+                font.pixelSize: 12
+                color: "white"
+                anchors.horizontalCenter: parent.horizontalCenter
+
+
+            }
         }
 
         Row {
@@ -163,6 +201,18 @@ ApplicationWindow {
                     height: 134
                     color: primaryColor
                     radius: 20
+                    Text {
+                        id: valueExternalPressure
+                        font.family: font.name
+                        // font.styleName: "Bold"
+                        //font.bold: true
+                        text: externalPressure.toString()
+                        font.pixelSize: 12
+                        color: "white"
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+
+                    }
                 }
 
                 Rectangle {
@@ -170,19 +220,51 @@ ApplicationWindow {
                     height: 134
                     color: primaryColor
                     radius: 20
+                    Text {
+                        id: valueExternalHumidity
+                        font.family: font.name
+                        // font.styleName: "Bold"
+                        //font.bold: true
+                        text: externalHumidity.toString()
+                        font.pixelSize: 12
+                        color: "white"
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+
+                    }
                 }
             }
         }
 
         Rectangle {
-            width: parent.width
+
+            width: parent.width - 18
             height: 200
             color: primaryColor
             radius: 20
-            anchors.left: parent.left
-            anchors.right: parent.right
-
-            Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            //anchors.left: parent.left
+            //anchors.right: parent.right
+            TextField {
+                id: textTX
+                width: parent.width - 18
+                placeholderText: qsTr("Send Text")
+                color: "LightBlue"
+                font.pixelSize: 18
+                anchors.horizontalCenter: parent.horizontalCenter
+                y: parent.height * 0.1
+            }
+            TextArea {
+                id: textRX
+                width: parent.width - 18
+                placeholderText: qsTr("Received Text")
+                readOnly: true
+                color: "LightBlue"
+                font.pixelSize: 18
+                anchors.horizontalCenter: parent.horizontalCenter
+                y: parent.height * 0.5
+            }
+            /*Text {
                 id: valueTemperatureInternal
                 font.family: font.name
                 // font.styleName: "Bold"
@@ -192,7 +274,7 @@ ApplicationWindow {
                 color: textColor
                 anchors.horizontalCenter: parent.horizontalCenter
                 //y: parent.height * 0.3
-            }
+            }*/
 
         }
         Rectangle {
@@ -333,18 +415,7 @@ ApplicationWindow {
                     property int minAngle: -90
                     property int maxAngle: 90;
                     property int currentValue: 0;
-                    /*
-                onRotationChanged: {
-                                // Tutaj możesz dodać logikę, która będzie wywoływać opinie zwrotną (haptic feedback)
-                                if (Qt.platform.os === "android") {
-                                    // Haptic feedback na Androidzie (dostępne od wersji Android 8+)
-                                    QtFeedback.playEffect(QtFeedback.ImpactFeedback)
-                                } else if (Qt.platform.os === "ios") {
-                                    // Haptic feedback na iOS (dostępne od wersji iOS 10+)
-                                    QtFeedback.playEffect(QtFeedback.SelectionFeedback)
-                                }
-                            }
-*/
+
                     background: Image {
                         source: "qrc:/images/DialBG.svg"
                         //source: "file://Users/patrykgruszowski/Inteligentna_Bluza/DialBackground.png"
@@ -379,7 +450,6 @@ ApplicationWindow {
 
                     Button {
                         id: autoButton
-
                         anchors.horizontalCenter: parent.horizontalCenter
                         y: parent.height * 0.25
                         Text {
@@ -416,7 +486,7 @@ ApplicationWindow {
                         //font.bold: true
                         text: "MANUAL"// Wyświetlenie aktualnej wartości pokrętła
                         font.pixelSize: 24
-                        color: "white"
+                        color: accentColor
                         anchors.horizontalCenter: parent.horizontalCenter
                         y: parent.height * 0.35
 
@@ -493,6 +563,16 @@ ApplicationWindow {
             function onNewData(data) {
                 textRX.text = data
                 console.log("Read:", data)
+                bufforText = data
+                var values = bufforText.trim().split(" ");
+
+                if (values.length === 4 && values[0] === "W:") {
+                    externalTemperature = parseFloat(values[1]);
+                    externalHumidity = parseFloat(values[2]);
+                    externalPressure = parseFloat(values[3]);
+                } else {
+                    console.log("Nieprawidłowy format łańcucha");
+                }
             }
             function onScanningFinished() {
                 listView.enabled=true
@@ -508,9 +588,11 @@ ApplicationWindow {
                 busyIndicator.running=false
                 toolButtonSend.enabled=true
                 drawer.close()
+                timerRunning = true
                 console.log("ConnectionStart")
             }
             function onConnectionEnd() {
+                timerRunning = false
                 disconnect = true
                 scanButton.text = "Connection End - Scan again"
                 scanButton.enabled = true
